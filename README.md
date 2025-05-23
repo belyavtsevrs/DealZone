@@ -1,6 +1,6 @@
 # DealZone
 
-## Functional Requirements
+## Functional requirements
 
 ### User registration and authentication:
 - Users must be able to register and login using email and password
@@ -17,3 +17,14 @@
 - Users must be able to mark their product as sold or delete it
 - Users must be able to filter products by: category , price , region ,date added
 - Users must be able to search for products by title
+## Unfunctional requirements
+
+### Performance
+- The system's response shouldn't exceed 500 ms
+- Thy system must proccess at least 1000 request per minute without performance decreasing
+### Security
+- User passwords must be stored in encrypted form
+- Authentication and authorization must work correctly to prevent unauthorized access
+### Usability
+- The interface should be intuitive and user-friendly for users 
+- Error messages should be clear and informative
