@@ -1,8 +1,18 @@
 spring:
   application:
     name: DealZone
+  config:
+    import: "optional:file:.env[.properties]"
   datasource:
     url: ${POSTGRES_URL}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    change-log: db.changelog/db.changelog-master.xml
