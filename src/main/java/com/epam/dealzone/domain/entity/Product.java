@@ -10,6 +10,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "product")
@@ -29,6 +30,7 @@ public class Product {
 
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
+
 
     @PrePersist
     private void init() {

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Product List</h1>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>UUID</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Created At</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${productList}">
+            <td th:text="${product.title}">Title</td>
+            <td th:text="${product.description}">Description</td>
+            <td th:text="${product.price}">Price</td>
+            <td th:text="${product.creationDate}">Date</td>
+        </tr>
+        </tbody>
+    </table>
+    <form method="POST" th:action="@{/api/products/}" th:object="${request}">
+        <table>
+            <tr><td>Title:</td><td><input type="text" th:field="*{title}"/></td></tr>
+            <tr><td>Description:</td><td><input type="text" th:field="*{description}"/></td></tr>
+            <tr><td>Price:</td><td><input type="number" step="0.01" th:field="*{price}"/></td></tr>
+        </table>
+        <button type="submit">Create</button>
+    </form>
+</body>
+</html>
