@@ -9,11 +9,11 @@
     <table border="1">
         <thead>
         <tr>
-            <th>UUID</th>
             <th>Title</th>
             <th>Description</th>
             <th>Price</th>
             <th>Created At</th>
+            <th>View</th>
         </tr>
         </thead>
         <tbody>
@@ -22,6 +22,9 @@
             <td th:text="${product.description}">Description</td>
             <td th:text="${product.price}">Price</td>
             <td th:text="${product.creationDate}">Date</td>
+            <td>
+                <a th:href="@{/api/products/product-info/{uuid}(uuid=${product.uuid})}">View</a>
+            </td>
         </tr>
         </tbody>
     </table>

@@ -8,11 +8,13 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @ToString
 @Builder
 public class ProductResponse {
+    private final String uuid;
     private final String title;
     private final String description;
     private final BigDecimal price;
@@ -20,6 +22,7 @@ public class ProductResponse {
 
     public static ProductResponse fromProduct(Product product){
         return ProductResponse.builder()
+                .uuid(product.getUuid().toString())
                 .title(product.getTitle())
                 .description(product.getDescription())
                 .price(product.getPrice())

@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -33,5 +34,15 @@ public class ProductServiceImpl implements ProductService {
                 .stream()
                 .map(x-> ProductResponse.fromProduct(x))
                 .toList();
+    }
+
+    @Override
+    public ProductResponse findById(UUID uuid) {
+        Product product = productRepository.findById(uuid)
+                .orElseThrow(()->{
+                    throw new RuntimeException("not found ");
+                });
+        ProductResponse response = ProductResponse.fromProduct(product);
+        return response;
     }
 }

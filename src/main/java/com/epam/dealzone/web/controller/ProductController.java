@@ -3,14 +3,13 @@ package com.epam.dealzone.web.controller;
 import com.epam.dealzone.domain.entity.Product;
 import com.epam.dealzone.service.ProductService;
 import com.epam.dealzone.web.dto.ProductRequest;
+import com.epam.dealzone.web.dto.ProductResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/api/products/")
@@ -34,4 +33,9 @@ public class ProductController {
         return "products";
     }
 
+    @GetMapping("/product-info/{uuid}")
+    public String productInfo(@PathVariable("uuid")UUID uuid, Model model){
+        model.addAttribute("product",productService.findById(uuid));
+        return "productInfo";
+    }
 }
