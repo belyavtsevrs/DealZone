@@ -5,12 +5,14 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Getter
 @Builder
-@ToString
+@ToString(exclude = "images")
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -32,6 +34,9 @@ public class Product {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Image> images = new ArrayList<>();
 
     @PrePersist
     private void init() {
@@ -41,5 +46,10 @@ public class Product {
         if (creationDate == null) {
             creationDate = LocalDateTime.now();
         }
+    }
+
+    public void addImage(Image image){
+        this.images.add(image);
+        image.setProduct(this);
     }
 }

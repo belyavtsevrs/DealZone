@@ -5,11 +5,16 @@
     <title>Title</title>
 </head>
 <body>
-    <table>
-        <tr><th>Title</th><td th:text="${product.title}"></td></tr>
-        <tr><th>Description</th><td th:text="${product.description}"></td></tr>
-        <tr><th>Price</th><td th:text="${product.price}"></td></tr>
-        <tr><th>Date</th><td th:text="${product.creationDate}"></td></tr>
-    </table>
+<table>
+    <tr>
+        <div th:each="image : ${product.images}">
+            <img th:src="@{/upload/{url}(url=${image})}">
+        </div>
+    </tr>
+    <tr><th>Title</th><td th:text="${product.title}"></td></tr>
+    <tr><th>Description</th><td th:text="${product.description}"></td></tr>
+    <tr><th>Price</th><td th:text="${product.price}"></td></tr>
+    <tr><th>Date</th><td th:text="${product.creationDate}"></td></tr>
+</table>
 </body>
 </html>
