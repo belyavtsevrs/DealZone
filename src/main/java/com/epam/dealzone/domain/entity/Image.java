@@ -24,6 +24,9 @@ public class Image {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_uuid")
     private Product product;
+    @OneToOne
+    @JoinColumn(name = "customer_uuid")
+    private Customer customer;
 
     @PrePersist
     private void init(){

@@ -24,7 +24,7 @@ public class FileStorageServiceImpl implements FileStorageService {
             Path targetFile = targerDir.resolve(fileName);
             Files.copy(file.getInputStream(),targetFile);
 
-            return dir + "/" + fileName;
+            return fileName;
         }catch (IOException e){
             throw new RuntimeException(e);
         }

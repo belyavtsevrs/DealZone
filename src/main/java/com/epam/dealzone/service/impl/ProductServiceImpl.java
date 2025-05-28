@@ -8,6 +8,8 @@ import com.epam.dealzone.web.dto.ProductRequest;
 import com.epam.dealzone.web.dto.ProductResponse;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,9 +28,10 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class ProductServiceImpl implements ProductService {
+    private static final String imageDir = "productImages";
+
     private final ProductRepository productRepository;
     private final FileStorageServiceImpl storageService;
-    private static final String imageDir = "productImages";
 
     public ProductServiceImpl(ProductRepository productRepository,
                               FileStorageServiceImpl storageService) {
@@ -37,32 +40,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product createProduct(ProductRequest request) {
-        return productRepository.save(request.toProduct());
-    }
-
-    @Override
-    public List<ProductResponse> findAll() {
-        return productRepository.findAll()
-                .stream()
-                .map(x-> ProductResponse.fromProduct(x))
-                .toList();
-    }
-
-    @Override
-    public ProductResponse findById(UUID uuid) {
-        Product product = productRepository.findById(uuid)
-                .orElseThrow(()->{
-                    throw new RuntimeException("not found ");
-                });
-        ProductResponse response = ProductResponse.fromProduct(product);
-        log.info("response = {}" , response);
-        return response;
-    }
-
-    @Override
     @Transactional
-    public Product createProductWithImage(ProductRequest request, List<MultipartFile> images) {
+    public void createWithImage(ProductRequest request, List<MultipartFile> images) {
         try {
             Product product = request.toProduct();
             for(int i = 0; i < images.size();i++){
@@ -73,10 +52,60 @@ public class ProductServiceImpl implements ProductService {
                         .build();
                 product.addImage(image);
             }
-            log.info("product = {}" , product);
-            return productRepository.save(product);
+            productRepository.save(product);
+            log.info("product = {} has bees saved" , product);
         }catch (Exception e) {
             throw new RuntimeException("Failed to create product with images", e);
         }
+    }
+
+    @Override
+    public void deleter(UUID uuid) {
+        Product product = productRepository.findById(uuid)
+                .orElseThrow(()->{
+                    throw new RuntimeException();
+                });
+        for (Image image : product.getImages()) {
+            try {
+                Path imagePath = Path.of(imageDir,image.getUrl());
+                Files.deleteIfExists(imagePath);
+            } catch (IOException e) {
+                log.warn("Failed to delete image: {}", image.getUrl(), e);
+            }
+        }
+        productRepository.deleteById(uuid);
+        log.info("product has been deleted");
+    }
+
+    @Override
+    public List<ProductResponse> retrieve() {
+        return productRepository.findAll()
+                .stream()
+                .map(x-> ProductResponse.fromProduct(x))
+                .toList();
+    }
+
+    @Override
+    public ProductResponse retrieve(UUID uuid) {
+        Product product = productRepository.findById(uuid)
+                .orElseThrow(()->{
+                    throw new RuntimeException("not found ");
+                });
+        ProductResponse response = ProductResponse.fromProduct(product);
+        log.info("response = {}" , response);
+        return response;
+    }
+
+    @Override
+    public void saver(ProductRequest request) {
+        Product product = productRepository.save(request.toProduct());
+        log.info("Product = {} has been created" , product);
+    }
+
+    @Override
+    public void updater(ProductRequest request, UUID uuid) {
+        Product existingProduct = productRepository.findById(uuid)
+                .orElseThrow(() -> new RuntimeException("not found" + uuid));
+        productRepository.save(existingProduct);
     }
 }

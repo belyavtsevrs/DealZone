@@ -8,13 +8,17 @@
 <table>
     <tr>
         <div th:each="image : ${product.images}">
-            <img th:src="@{/upload/{url}(url=${image})}">
+            <img th:src="@{/upload/productImages/{url}(url=${image})}">
         </div>
     </tr>
     <tr><th>Title</th><td th:text="${product.title}"></td></tr>
     <tr><th>Description</th><td th:text="${product.description}"></td></tr>
     <tr><th>Price</th><td th:text="${product.price}"></td></tr>
     <tr><th>Date</th><td th:text="${product.creationDate}"></td></tr>
+
+    <form method="GET" th:action="@{/api/products/delete/{uuid}(uuid=${product.uuid})}">
+        <button type="submit">delete product</button>
+    </form>
 </table>
 </body>
 </html>

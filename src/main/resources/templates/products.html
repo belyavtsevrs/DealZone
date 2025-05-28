@@ -33,7 +33,11 @@
             <tr><td>Title:</td><td><input type="text" th:field="*{title}"/></td></tr>
             <tr><td>Description:</td><td><input type="text" th:field="*{description}"/></td></tr>
             <tr><td>Price:</td><td><input type="number" step="0.01" th:field="*{price}"/></td></tr>
-            <label for="images">Images (max 3):</label>
+            <label for="images">Image 1</label>
+            <input type="file" name="images" multiple accept="image/*"/><br/>
+            <label for="images">Image 2</label>
+            <input type="file" name="images" multiple accept="image/*"/><br/>
+            <label for="images">Image 3</label>
             <input type="file" name="images" multiple accept="image/*"/><br/>
             <button type="submit">Create</button>
         </table>

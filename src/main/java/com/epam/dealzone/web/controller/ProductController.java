@@ -17,5 +17,4 @@ public interface ProductController {
     );
     public String productInfo(@PathVariable("uuid") UUID uuid, Model model);
     String findAll();
-
 }
