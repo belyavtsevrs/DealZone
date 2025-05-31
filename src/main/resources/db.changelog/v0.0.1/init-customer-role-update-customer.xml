@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1748445312857-1" author="BelyavtsevRS">
+        <createTable tableName="customer_role">
+            <column name="customer_uuid" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="customer_role"
+                baseColumnNames="customer_uuid"
+                constraintName="fk_customer_role_customer"
+                referencedTableName="customer"
+                referencedColumnNames="customer_uuid"/>
+
+        <addPrimaryKey
+                tableName="customer_role"
+                columnNames="customer_uuid, role"
+                constraintName="pk_customer_role"/>
+    </changeSet>
+
+
+</databaseChangeLog>

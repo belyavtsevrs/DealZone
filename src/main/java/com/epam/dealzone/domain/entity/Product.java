@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @ToString(exclude = "images")
 @NoArgsConstructor
@@ -37,6 +38,9 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
     private List<Image> images = new ArrayList<>();
+    @ManyToOne()
+    @JoinColumn(name = "customer_uuid")
+    private Customer customer;
 
     @PrePersist
     private void init() {

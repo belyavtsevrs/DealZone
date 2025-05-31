@@ -8,21 +8,13 @@ import com.epam.dealzone.web.dto.ProductRequest;
 import com.epam.dealzone.web.dto.ProductResponse;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -81,8 +73,13 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductResponse> retrieve() {
         return productRepository.findAll()
                 .stream()
-                .map(x-> ProductResponse.fromProduct(x))
+                .map(x-> ProductResponse.toResponse(x))
                 .toList();
+    }
+
+    @Override
+    public List<ProductResponse> retrieve(int page, int size) {
+        return List.of();
     }
 
     @Override
@@ -91,7 +88,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(()->{
                     throw new RuntimeException("not found ");
                 });
-        ProductResponse response = ProductResponse.fromProduct(product);
+        ProductResponse response = ProductResponse.toResponse(product);
         log.info("response = {}" , response);
         return response;
     }

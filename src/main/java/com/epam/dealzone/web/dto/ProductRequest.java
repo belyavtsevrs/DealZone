@@ -16,20 +16,13 @@ public class ProductRequest {
     @NotNull(message = "Title must not be null")
     @Size(min = 5, message = "Title has to contain at least 5 letters")
     private String title;
-
     @NotBlank(message = "Description must not be empty")
     private String description;
-
     @NotNull(message = "Price must not be null")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than zero")
     private BigDecimal price;
-    public ProductRequest() {
-    }
 
-    public ProductRequest(String title, String description, BigDecimal price) {
-        this.title = title;
-        this.description = description;
-        this.price = price;
+    public ProductRequest() {
     }
 
     public Product toProduct() {

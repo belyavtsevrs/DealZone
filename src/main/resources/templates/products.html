@@ -28,7 +28,7 @@
         </tr>
         </tbody>
     </table>
-    <form method="POST" th:action="@{/api/products/}" th:object="${request}" enctype="multipart/form-data">
+    <form method="POST" th:action="@{/products/}" th:object="${request}" enctype="multipart/form-data">
         <table>
             <tr><td>Title:</td><td><input type="text" th:field="*{title}"/></td></tr>
             <tr><td>Description:</td><td><input type="text" th:field="*{description}"/></td></tr>
@@ -41,7 +41,6 @@
             <input type="file" name="images" multiple accept="image/*"/><br/>
             <button type="submit">Create</button>
         </table>
-
     </form>
 </body>
 </html>

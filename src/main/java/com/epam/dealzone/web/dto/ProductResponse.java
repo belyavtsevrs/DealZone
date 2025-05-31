@@ -1,16 +1,13 @@
 package com.epam.dealzone.web.dto;
 
-import com.epam.dealzone.domain.entity.Image;
 import com.epam.dealzone.domain.entity.Product;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @ToString
@@ -23,7 +20,7 @@ public class ProductResponse {
     private final List<String> images;
     private final LocalDateTime creationDate;
 
-    public static ProductResponse fromProduct(Product product){
+    public static ProductResponse toResponse(Product product){
         List<String> imageUrls = product.getImages()
                 .stream().map(x -> x.getUrl())
                 .toList();

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="content-container">
+    <form th:action="@{/security/login}" method="post">
+        <table>
+            <tr>
+                <td><label>Email:</label></td>
+                <td><input type="text" name="username" /></td>
+            </tr>
+            <tr>
+                <td><label>Password:</label></td>
+                <td><input type="password" name="password" /></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit">Login</button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <a th:href="@{/security/registration}">Create Account</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<p th:if="${param.error}" style="color:red;">Invalid username or password.</p>
+<p th:if="${param.logout}" style="color:green;">You have been logged out.</p>
+
+</body>
+</html>

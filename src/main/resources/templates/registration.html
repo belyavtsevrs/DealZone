@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+    <div class="content-container">
+        <form th:action="@{/security/register}" th:object="${request}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <table>
+                <tr>
+                    <td>Email:</td>
+                    <td><input type="email" th:field="*{email}" /></td>
+                </tr>
+                <tr>
+                    <td>Password:</td>
+                    <td><input type="password" th:field="*{password}" /></td>
+                </tr>
+                <tr>
+                    <td>Name:</td>
+                    <td><input type="text" th:field="*{name}" /></td>
+                </tr>
+                <tr>
+                    <td>Surname:</td>
+                    <td><input type="text" th:field="*{surname}" /></td>
+                </tr>
+                <tr>
+                    <td>City:</td>
+                    <td><input type="text" th:field="*{city}" /></td>
+                </tr>
+                <tr>
+                    <td>Phone Number:</td>
+                    <td><input type="text" th:field="*{phoneNumber}" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button type="submit">Register</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <h3>You already have an account please<a th:href="@{/security/login}">Sign in ...</a></h3>
+    </div>
+</body>
+</html>

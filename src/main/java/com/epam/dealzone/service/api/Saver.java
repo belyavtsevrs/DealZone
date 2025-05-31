@@ -8,5 +8,4 @@ import java.util.List;
 
 public interface Saver<E> {
     void saver(E e);
-    void createWithImage(E e, List<MultipartFile> images);
 }
