@@ -23,13 +23,16 @@ import java.util.UUID;
 @Service
 public class CustomerServiceImpl implements CustomerService {
     private static final String imageDir = "customerAvatars";
-
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
+    private final FileStorageServiceImpl fileStorageService;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository, PasswordEncoder passwordEncoder) {
+    public CustomerServiceImpl(CustomerRepository customerRepository,
+                               PasswordEncoder passwordEncoder,
+                               FileStorageServiceImpl fileStorageService) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
+        this.fileStorageService = fileStorageService;
     }
 
     @Override
@@ -52,7 +55,13 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRepository.findById(uuid).orElseThrow(()->{
             throw new RuntimeException();
         });
-        return null;
+        return CustomerResponse.toResponse(customer);
+    }
+
+    @Override
+    public CustomerResponse retrieve(String name) {
+
+        return CustomerResponse.toResponse(customerRepository.findCustomerByEmail(name).get());
     }
 
     @Override
@@ -67,7 +76,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .active(true)
                 .role(Set.of(Role.USER))
-                .avatar_url("no-user-image.png")
+                .avatar_url("no-user-image.jpg")
                 .build();
 
         log.info("customer = {}",customer);
@@ -75,7 +84,27 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updater(ProductRequest request, UUID uuid) {
+    public void updater(CustomerRequest request, UUID uuid) {
+        Customer customer = customerRepository.findById(uuid)
+                .orElseThrow(() -> new RuntimeException("Customer not found with uuid: " + uuid));
 
+        String url = request.getNewAvatar().isEmpty()
+                ? customer.getAvatar_url()
+                : fileStorageService.saveFile(request.getNewAvatar(), imageDir);
+
+        Customer updated = Customer.builder()
+                .uuid(uuid)
+                .email(customer.getEmail())
+                .password(customer.getPassword())
+                .active(customer.isActive())
+                .name(request.getName())
+                .surname(request.getSurname())
+                .phoneNumber(request.getPhoneNumber())
+                .city(request.getCity())
+                .avatar_url(url)
+                .creationDate(customer.getCreationDate())
+                .build();
+
+        customerRepository.save(updated);
     }
 }

@@ -1,9 +1,12 @@
 package com.epam.dealzone.web.controller.impl;
 
+import com.epam.dealzone.domain.entity.Customer;
+import com.epam.dealzone.service.CustomerService;
 import com.epam.dealzone.service.ProductService;
 import com.epam.dealzone.service.api.Deleter;
 import com.epam.dealzone.service.api.Retriever;
 import com.epam.dealzone.service.api.Updater;
+import com.epam.dealzone.web.dto.CustomerResponse;
 import com.epam.dealzone.web.dto.ProductRequest;
 import com.epam.dealzone.web.dto.ProductResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,35 +23,46 @@ import java.util.UUID;
 @RequestMapping("/products/")
 public class ProductController {
     private final Retriever<ProductResponse,UUID> retriever;
+    private final Retriever<CustomerResponse,UUID> customerRetriever;
     private final Deleter<UUID> deleter;
     private final Updater<ProductRequest,UUID> updater;
     private final ProductService productService;
 
     public ProductController(
-            @Qualifier("productServiceImpl") Retriever<ProductResponse, UUID> retriever,
+            @Qualifier("productServiceImpl") Retriever<ProductResponse,UUID> retriever,
+            @Qualifier("customerServiceImpl") Retriever<CustomerResponse, UUID> customerRetriever,
             @Qualifier("productServiceImpl") Deleter<UUID> deleter,
-            @Qualifier("productServiceImpl") Updater<ProductRequest, UUID> updater,
+            @Qualifier("productServiceImpl") Updater<ProductRequest,UUID> updater,
             @Qualifier("productServiceImpl") ProductService productService
     ) {
         this.retriever = retriever;
+        this.customerRetriever = customerRetriever;
         this.deleter = deleter;
         this.updater = updater;
         this.productService = productService;
     }
 
+    @GetMapping("/sell-product")
+    public String createProduct(Model model) {
+        model.addAttribute("request", new ProductRequest());
+        return "productCreationForm";
+    }
 
-    @PostMapping()
+    @PostMapping("/sell-product")
     public String createProduct(
             @ModelAttribute ProductRequest productRequest,
-            @RequestParam("images") List<MultipartFile> images
-    ) {
+            @RequestParam("images") List<MultipartFile> images,Principal principal) {
+        productRequest.setPrincipalName(principal.getName());
         productService.createWithImage(productRequest, images);
         return "redirect:/products/";
     }
 
     @GetMapping("/")
-    public String findAll(Model model){
-        model.addAttribute("request", new ProductRequest());
+    public String findAll(Model model, Principal principal){
+        if(principal != null){
+            model.addAttribute("customer",customerRetriever.retrieve(principal.getName()));
+        }
+        model.addAttribute("userPrincipal", principal);
         model.addAttribute("productList",retriever.retrieve());
         return "products";
     }

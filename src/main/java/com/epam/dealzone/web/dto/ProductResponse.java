@@ -1,13 +1,17 @@
 package com.epam.dealzone.web.dto;
 
+import com.epam.dealzone.domain.entity.Customer;
 import com.epam.dealzone.domain.entity.Product;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @ToString
@@ -18,12 +22,17 @@ public class ProductResponse {
     private final String description;
     private final BigDecimal price;
     private final List<String> images;
-    private final LocalDateTime creationDate;
+    private String creationDate;
+    private UUID customerUUID;
 
     public static ProductResponse toResponse(Product product){
         List<String> imageUrls = product.getImages()
                 .stream().map(x -> x.getUrl())
                 .toList();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String date = product.getCreationDate().format(formatter);
+        Customer owner = product.getCustomer();
 
         return ProductResponse.builder()
                 .uuid(product.getUuid().toString())
@@ -31,7 +40,8 @@ public class ProductResponse {
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .images(imageUrls)
-                .creationDate(product.getCreationDate())
+                .creationDate(date)
+                .customerUUID(owner.getUuid())
                 .build();
     }
 }

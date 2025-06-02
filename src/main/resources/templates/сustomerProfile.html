@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Info</title>
+    <link rel="stylesheet" th:href="@{/css/profile.css}">
+    <link rel="stylesheet" th:href="@{/css/products.css}">
+    <script src="/js/scripts.js"></script>
+</head>
+<body>
+
+<div class="product-container">
+
+    <div id="profileView">
+        <h2 style="text-align: center; margin-bottom: 30px;">Customer Profile</h2>
+
+        <table class="product-table">
+            <tr>
+                <th>Email</th>
+                <td th:text="${customer.email}"></td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td th:text="${customer.name}"></td>
+            </tr>
+            <tr>
+                <th>Surname</th>
+                <td th:text="${customer.surname}"></td>
+            </tr>
+            <tr>
+                <th>Phone Number</th>
+                <td th:text="${customer.phoneNumber}"></td>
+            </tr>
+            <tr>
+                <th>City</th>
+                <td th:text="${customer.city}"></td>
+            </tr>
+            <tr>
+                <th>Creation Date</th>
+                <td th:text="${customer.creationDate}"></td>
+            </tr>
+            <tr th:if="${customer.avatar_url != null}">
+                <th>Avatar</th>
+                <td>
+                    <img th:src="@{/upload/customerAvatars/{url}(url=${customer.avatar_url})}"
+                         alt="Preview"
+                         style="width:250px; height:250px; object-fit:cover; border-radius:4px;"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="profileEditForm" style="display: none;">
+        <h2 style="text-align: center; margin-bottom: 30px;">Edit Profile</h2>
+
+        <form th:action="@{/customers/profile/update-profile/{uuid}(uuid=${customer.uuid})}" th:object="${customerRequest}" method="post" enctype="multipart/form-data">
+            <table class="product-table">
+                <tr>
+                    <th>Name</th>
+                    <td><input type="text" th:field="*{name}" th:value="${customer.name}" required /></td>
+                </tr>
+                <tr>
+                    <th>Surname</th>
+                    <td><input type="text" th:field="*{surname}" required /></td>
+                </tr>
+                <tr>
+                    <th>Phone Number</th>
+                    <td><input type="text" th:field="*{phoneNumber}" required /></td>
+                </tr>
+                <tr>
+                    <th>City</th>
+                    <td><input type="text" th:field="*{city}" required /></td>
+                </tr>
+                <tr>
+                    <th>Avatar</th>
+                    <td><input type="file" th:field="*{newAvatar}" accept="image/*" /></td>
+                </tr>
+            </table>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <button type="submit" class="sell-btn">Save Changes</button>
+                <button type="button" onclick="toggleEditForm()" class="logout-btn" style="margin-left: 10px;">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <h3 style="text-align: center; margin-top: 40px;">Products</h3>
+
+    <table class="product-table">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Preview</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${customer.products}"
+            class="clickable-row"
+            th:attr="data-uuid=${product.uuid}">
+            <td th:text="${product.title}"></td>
+            <td th:text="${product.description}"></td>
+            <td th:text="${product.price}"></td>
+            <td>
+                <img th:src="@{/upload/productImages/{uuid}(uuid=${product.images[0]})}" alt="Preview"
+                     style="width: 60px; height: 60px; object-fit: cover; border-radius: var(--border-radius); border: 1px solid #ddd;">
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div style="text-align: center; margin: 30px 0;"
+         th:if="${customer.email.equals(customerPrincipal.name)}">
+        <button onclick="toggleEditForm()" class="sell-btn">Edit Profile</button>
+    </div>
+
+
+    <div style="text-align: center; margin-top: 40px;">
+        <a th:href="@{/products/}" class="sell-btn">Back to Home</a>
+    </div>
+    <form th:action="@{/security/logout}" method="post"
+          style="text-align: center; margin-top: 40px;"
+          th:if="${customer.email.equals(customerPrincipal.name)}">
+        <input class="logout-btn" type="submit" value="Logout">
+    </form>
+
+</div>
+
+</body>
+</html>

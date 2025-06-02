@@ -3,22 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/products.css}">
+    <script src="/js/scripts.js"></script>
 </head>
 <body>
-<table>
-    <tr>
-        <div th:each="image : ${product.images}">
-            <img th:src="@{/upload/productImages/{url}(url=${image})}">
-        </div>
-    </tr>
-    <tr><th>Title</th><td th:text="${product.title}"></td></tr>
-    <tr><th>Description</th><td th:text="${product.description}"></td></tr>
-    <tr><th>Price</th><td th:text="${product.price}"></td></tr>
-    <tr><th>Date</th><td th:text="${product.creationDate}"></td></tr>
+    <div id="productView">
+        <table class="product-table">
+            <tr>
+                <td colspan="2">
+                    <div class="image-gallery">
+                        <div th:each="image : ${product.images}">
+                            <img th:src="@{/upload/productImages/{url}(url=${image})}" alt="Product Image">
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr><th>Title</th><td th:text="${product.title}"></td></tr>
+            <tr><th>Description</th><td th:text="${product.description}"></td></tr>
+            <tr><th>Price</th><td th:text="${product.price}"></td></tr>
+            <tr><th>Date</th><td th:text="${product.creationDate}"></td></tr>
+            <td>
+                <a th:href="@{/customers/profile/{uuid}(uuid=${product.customerUUID})}" class="view-link">get in touch with seller</a>
+            </td>
+            <tr>
+                <td colspan="2">
+                    <form method="GET" th:action="@{/products/delete/{uuid}(uuid=${product.uuid})}">
+                        <button type="submit" class="delete-btn">Delete Product</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <button type="button" class="sell-btn" onclick="toggleProductEditForm()">Edit Product</button>
+                </td>
+            </tr>
+        </table>
 
-    <form method="GET" th:action="@{/api/products/delete/{uuid}(uuid=${product.uuid})}">
-        <button type="submit">delete product</button>
-    </form>
-</table>
+    </div>
+    <div id="productViewEditForm" style="display: none;">
+        <h2 style="text-align: center; margin-bottom: 30px;">Edit Product</h2>
+
+        <form th:action="@{/products/edit/{uuid}(uuid=${product.uuid})}" method="post" enctype="multipart/form-data">
+            <table class="product-table">
+                <tr>
+                    <th>Title</th>
+                    <td><input type="text" name="title" th:value="${product.title}" required minlength="5"/></td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td><input type="text" name="description" th:value="${product.description}" required/></td>
+                </tr>
+                <tr>
+                    <th>Price</th>
+                    <td><input type="number" step="0.01" name="price" th:value="${product.price}" required/></td>
+                </tr>
+                <tr>
+                    <th>Image 1</th>
+                    <td><input type="file" name="images" accept="image/*"/></td>
+                </tr>
+                <tr>
+                    <th>Image 2</th>
+                    <td><input type="file" name="images" accept="image/*"/></td>
+                </tr>
+                <tr>
+                    <th>Image 3</th>
+                    <td><input type="file" name="images" accept="image/*"/></td>
+                </tr>
+            </table>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <button type="submit" class="sell-btn">Save Changes</button>
+                <button type="button" onclick="toggleProductEditForm()" class="delete-btn" style="margin-left: 10px;">Cancel</button>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

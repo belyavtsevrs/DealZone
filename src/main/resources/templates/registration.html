@@ -7,7 +7,7 @@
 </head>
 <body>
 
-    <div class="content-container">
+    <div class="form-container">
         <form th:action="@{/security/register}" th:object="${request}" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <table>
@@ -42,7 +42,7 @@
                 </tr>
             </table>
         </form>
-        <h3>You already have an account please<a th:href="@{/security/login}">Sign in ...</a></h3>
+        <h3>You already have an account please <a th:href="@{/security/login}">Sign in ...</a></h3>
     </div>
 </body>
 </html>

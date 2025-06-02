@@ -2,7 +2,6 @@ package com.epam.dealzone.web.controller.impl;
 
 import com.epam.dealzone.service.CustomerService;
 import com.epam.dealzone.web.dto.CustomerRequest;
-import com.epam.dealzone.web.dto.RegisterRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

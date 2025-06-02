@@ -14,6 +14,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -36,5 +37,5 @@ public class CustomerRequest {
     private String city;
     @Pattern(regexp = "\\+?[0-9]{10,15}", message = "Invalid phone number")
     private String phoneNumber;
-
+    private MultipartFile newAvatar;
 }

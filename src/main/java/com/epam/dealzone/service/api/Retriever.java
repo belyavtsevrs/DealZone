@@ -6,4 +6,5 @@ public interface Retriever<E,ID> {
     List<E> retrieve();
     List<E> retrieve(int page,int size);
     E retrieve(ID id);
+    E retrieve(String name);
 }
