@@ -6,6 +6,7 @@ import com.epam.dealzone.service.ProductService;
 import com.epam.dealzone.service.api.Deleter;
 import com.epam.dealzone.service.api.Retriever;
 import com.epam.dealzone.service.api.Updater;
+import com.epam.dealzone.service.impl.ProductServiceImpl;
 import com.epam.dealzone.web.dto.CustomerResponse;
 import com.epam.dealzone.web.dto.ProductRequest;
 import com.epam.dealzone.web.dto.ProductResponse;
@@ -27,19 +28,21 @@ public class ProductController {
     private final Deleter<UUID> deleter;
     private final Updater<ProductRequest,UUID> updater;
     private final ProductService productService;
+    private final ProductServiceImpl productServiceImpl;
 
     public ProductController(
             @Qualifier("productServiceImpl") Retriever<ProductResponse,UUID> retriever,
             @Qualifier("customerServiceImpl") Retriever<CustomerResponse, UUID> customerRetriever,
             @Qualifier("productServiceImpl") Deleter<UUID> deleter,
             @Qualifier("productServiceImpl") Updater<ProductRequest,UUID> updater,
-            @Qualifier("productServiceImpl") ProductService productService
-    ) {
+            @Qualifier("productServiceImpl") ProductService productService,
+            ProductServiceImpl productServiceImpl) {
         this.retriever = retriever;
         this.customerRetriever = customerRetriever;
         this.deleter = deleter;
         this.updater = updater;
         this.productService = productService;
+        this.productServiceImpl = productServiceImpl;
     }
 
     @GetMapping("/sell-product")
@@ -48,12 +51,22 @@ public class ProductController {
         return "productCreationForm";
     }
 
-    @PostMapping("/sell-product")
+    /*@PostMapping("/sell-product")
     public String createProduct(
             @ModelAttribute ProductRequest productRequest,
             @RequestParam("images") List<MultipartFile> images,Principal principal) {
+
         productRequest.setPrincipalName(principal.getName());
         productService.createWithImage(productRequest, images);
+        return "redirect:/products/";
+    }*/
+
+    @PostMapping("/sell-product")
+    public String createProduct(
+            @ModelAttribute ProductRequest productRequest,Principal principal) {
+
+        productRequest.setPrincipalName(principal.getName());
+        productServiceImpl.saver(productRequest);
         return "redirect:/products/";
     }
 
@@ -68,8 +81,11 @@ public class ProductController {
     }
 
     @GetMapping("/product-info/{uuid}")
-    public String productInfo(@PathVariable("uuid")UUID uuid, Model model){
-        model.addAttribute("product",retriever.retrieve(uuid));
+    public String productInfo(@PathVariable("uuid")UUID uuid, Model model,Principal principal){
+        ProductResponse product = retriever.retrieve(uuid);
+        model.addAttribute("product",product);
+        model.addAttribute("currentUser",principal.getName());
+        model.addAttribute("productOwner", product.getEmailOwner());
         return "productInfo";
     }
 

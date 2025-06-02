@@ -54,10 +54,10 @@
 
         <form th:action="@{/customers/profile/update-profile/{uuid}(uuid=${customer.uuid})}" th:object="${customerRequest}" method="post" enctype="multipart/form-data">
             <table class="product-table">
-                <tr>
-                    <th>Name</th>
-                    <td><input type="text" th:field="*{name}" th:value="${customer.name}" required /></td>
-                </tr>
+                    <tr>
+                        <th>Name</th>
+                        <td><input type="text" th:field="*{name}"  id="name" required /></td>
+                    </tr>
                 <tr>
                     <th>Surname</th>
                     <td><input type="text" th:field="*{surname}" required /></td>
@@ -113,8 +113,7 @@
          th:if="${customer.email.equals(customerPrincipal.name)}">
         <button onclick="toggleEditForm()" class="sell-btn">Edit Profile</button>
     </div>
-
-
+Я
     <div style="text-align: center; margin-top: 40px;">
         <a th:href="@{/products/}" class="sell-btn">Back to Home</a>
     </div>

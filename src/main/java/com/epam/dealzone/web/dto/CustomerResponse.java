@@ -4,6 +4,7 @@ import com.epam.dealzone.domain.entity.Customer;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -22,6 +23,16 @@ public class CustomerResponse {
     private String creationDate;
     private String city;
     private List<ProductResponse> products;
+
+    public CustomerRequest toRequest() {
+        CustomerRequest customerRequest = new CustomerRequest();
+        customerRequest.setEmail(this.email);
+        customerRequest.setName(this.name);
+        customerRequest.setSurname(this.surname);
+        customerRequest.setPhoneNumber(this.phoneNumber);
+        customerRequest.setCity(this.city);
+        return customerRequest;
+    }
 
     public static CustomerResponse toResponse(Customer customer){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -44,4 +55,5 @@ public class CustomerResponse {
                 .products(responses)
                 .build();
     }
+
 }

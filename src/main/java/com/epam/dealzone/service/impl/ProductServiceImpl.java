@@ -48,7 +48,6 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(()->{
                     throw new RuntimeException("user not found");
                 });
-
         try {
             Product product = request.toProduct();
             for(int i = 0; i < imagesList.size();i++){
@@ -116,14 +115,39 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void saver(ProductRequest request) {
-        Product product = productRepository.save(request.toProduct());
-        log.info("Product = {} has been created" , product);
+        List<MultipartFile> imagesList = request.getImages().stream()
+                .filter(image -> !image.isEmpty())
+                .toList();
+        Customer owner = customerRepository.findCustomerByEmail(request.getPrincipalName())
+                .orElseThrow(()->{
+                    throw new RuntimeException("user not found");
+                });
+
+        try {
+            Product product = request.toProduct();
+            for(int i = 0; i < imagesList.size();i++){
+                String url = storageService.saveFile(imagesList.get(i),imageDir);
+                Image image = Image.builder()
+                        .url(url)
+                        .isPreview(i == 0 ? true : false)
+                        .build();
+                product.addImage(image);
+            }
+            product.setCustomer(owner);
+            productRepository.save(product);
+            log.info("product = {} has bees saved" , product);
+        }catch (Exception e) {
+            throw new RuntimeException("Failed to create product with images", e);
+        }
     }
 
     @Override
     public void updater(ProductRequest request, UUID uuid) {
         Product existingProduct = productRepository.findById(uuid)
                 .orElseThrow(() -> new RuntimeException("not found" + uuid));
+
+        Product product = Product.builder()
+                .build();
         productRepository.save(existingProduct);
     }
 }

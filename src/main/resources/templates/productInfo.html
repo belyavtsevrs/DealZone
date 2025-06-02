@@ -27,13 +27,13 @@
             </td>
             <tr>
                 <td colspan="2">
-                    <form method="GET" th:action="@{/products/delete/{uuid}(uuid=${product.uuid})}">
+                    <form method="GET" th:action="@{/products/delete/{uuid}(uuid=${product.uuid})}" th:if="${currentUser == productOwner}">
                         <button type="submit" class="delete-btn">Delete Product</button>
                     </form>
                 </td>
             </tr>
             <tr>
-                <td colspan="2" style="text-align: center;">
+                <td colspan="2" style="text-align: center;" th:if="${currentUser == productOwner}">
                     <button type="button" class="sell-btn" onclick="toggleProductEditForm()">Edit Product</button>
                 </td>
             </tr>
@@ -71,7 +71,7 @@
                 </tr>
             </table>
 
-            <div style="text-align: center; margin-top: 20px;">
+            <div style="text-align: center; margin-top: 20px;" th:if="${currentUser == productOwner}">
                 <button type="submit" class="sell-btn">Save Changes</button>
                 <button type="button" onclick="toggleProductEditForm()" class="delete-btn" style="margin-left: 10px;">Cancel</button>
             </div>

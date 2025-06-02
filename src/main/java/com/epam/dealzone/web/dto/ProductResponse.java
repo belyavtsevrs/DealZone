@@ -24,6 +24,7 @@ public class ProductResponse {
     private final List<String> images;
     private String creationDate;
     private UUID customerUUID;
+    private String emailOwner;
 
     public static ProductResponse toResponse(Product product){
         List<String> imageUrls = product.getImages()
@@ -42,6 +43,7 @@ public class ProductResponse {
                 .images(imageUrls)
                 .creationDate(date)
                 .customerUUID(owner.getUuid())
+                .emailOwner(owner.getEmail())
                 .build();
     }
 }

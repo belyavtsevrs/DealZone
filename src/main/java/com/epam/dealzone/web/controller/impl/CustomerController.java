@@ -1,5 +1,6 @@
 package com.epam.dealzone.web.controller.impl;
 
+import com.epam.dealzone.domain.entity.Customer;
 import com.epam.dealzone.service.api.Retriever;
 import com.epam.dealzone.service.api.Updater;
 import com.epam.dealzone.web.dto.CustomerRequest;
@@ -29,6 +30,7 @@ public class CustomerController {
 
     @GetMapping("/profile/{param}")
     public String customerProfile(@PathVariable("param") String param, Model model, Principal principal){
+
         try {
             UUID uuid = UUID.fromString(param);
             model.addAttribute("customer", retriever.retrieve(uuid));
@@ -37,6 +39,7 @@ public class CustomerController {
         }
         model.addAttribute("customerPrincipal",principal);
         model.addAttribute("customerRequest",new CustomerRequest());
+
         return "сustomerProfile";
     }
 

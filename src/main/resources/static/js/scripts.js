@@ -12,6 +12,7 @@ function toggleEditForm() {
 function toggleProductEditForm() {
     const view = document.getElementById("productView");
     const form = document.getElementById("productViewEditForm");
+
     if (form.style.display === "none") {
         view.style.display = "none";
         form.style.display = "block";
@@ -38,12 +39,12 @@ function validateForm() {
     const price = document.getElementById('price').value.trim();
 
     if (!title) {
-        alert("Please enter a title.");
+        alert("Please enter a title ");
         return false;
     }
 
     if (title.length < 5) {
-        alert("Title must be at least 5 characters long.");
+        alert("Title must be at least 5 characters long ");
         return false;
     }
 
@@ -53,21 +54,9 @@ function validateForm() {
     }
 
     if (!price || isNaN(price) || Number(price) <= 0) {
-        alert("Please enter a valid price greater than 0.");
+        alert("Please enter a valid price more than 0 ");
         return false;
     }
 
-    const images = document.querySelectorAll('.image-input');
-    let hasFile = false;
-    for (const input of images) {
-        if (input.files.length > 0) {
-            hasFile = true;
-            break;
-        }
-    }
 
-    if (!hasFile) {
-        alert("Please upload at least one image.");
-        return false;
-    }
 }
