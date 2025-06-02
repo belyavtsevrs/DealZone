@@ -30,16 +30,17 @@ public class CustomerController {
 
     @GetMapping("/profile/{param}")
     public String customerProfile(@PathVariable("param") String param, Model model, Principal principal){
-
+        CustomerResponse customer;
         try {
             UUID uuid = UUID.fromString(param);
-            model.addAttribute("customer", retriever.retrieve(uuid));
+            customer = retriever.retrieve(uuid);
         } catch (IllegalArgumentException e) {
-            model.addAttribute("customer", retriever.retrieve(param));
+            customer = retriever.retrieve(param);
         }
-        model.addAttribute("customerPrincipal",principal);
-        model.addAttribute("customerRequest",new CustomerRequest());
 
+        model.addAttribute("customer", customer);
+        model.addAttribute("customerPrincipal", principal);
+        model.addAttribute("customerRequest", customer.toRequest());
         return "сustomerProfile";
     }
 
