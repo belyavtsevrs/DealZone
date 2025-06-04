@@ -6,39 +6,41 @@
     <script src="/js/scripts.js"></script>
 </head>
 <body>
-<form method="POST" th:action="@{/products/sell-product}" th:object="${request}" enctype="multipart/form-data" onsubmit="return validateForm()">
-    <table class="form-table">
-        <tr>
-            <td>Title:</td>
-            <td><input type="text" th:field="*{title}"/></td>
-        </tr>
-        <tr>
-            <td>Description:</td>
-            <td><input type="text" th:field="*{description}" /></td>
-        </tr>
-        <tr>
-            <td>Price:</td>
-            <td><input type="number" step="0.00" th:field="*{price}" /></td>
-        </tr>
-        <tr>
-            <td>Image 1:</td>
-            <td><input type="file" th:field="*{images[0]}" accept="image/*" /></td>
-        </tr>
-        <tr>
-            <td>Image 2:</td>
-            <td><input type="file" th:field="*{images[1]}" accept="image/*" /></td>
-        </tr>
-        <tr>
-            <td>Image 3:</td>
-            <td><input type="file" th:field="*{images[2]}" accept="image/*" /></td>
-        </tr>
+<div class="product-container">
+    <form method="POST" th:action="@{/products/sell-product}" th:object="${request}" enctype="multipart/form-data" onsubmit="return validateForm()">
+        <table class="product-table">
+            <tr>
+                <td>Title:</td>
+                <td><input type="text" th:field="*{title}"/></td>
+            </tr>
+            <tr>
+                <td>Description:</td>
+                <td><input type="text" th:field="*{description}" /></td>
+            </tr>
+            <tr>
+                <td>Price:</td>
+                <td><input type="number" step="0.00" th:field="*{price}" /></td>
+            </tr>
+            <tr>
+                <td>Image 1:</td>
+                <td><input type="file" th:field="*{images[0]}" accept="image/*" /></td>
+            </tr>
+            <tr>
+                <td>Image 2:</td>
+                <td><input type="file" th:field="*{images[1]}" accept="image/*" /></td>
+            </tr>
+            <tr>
+                <td>Image 3:</td>
+                <td><input type="file" th:field="*{images[2]}" accept="image/*" /></td>
+            </tr>
 
-        <tr>
-            <td colspan="2" style="text-align: center;">
-                <button type="submit" class="submit-btn">Create</button>
-            </td>
-        </tr>
-    </table>
-</form>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <button type="submit" class="submit-btn">Create</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
 </body>
 </html>

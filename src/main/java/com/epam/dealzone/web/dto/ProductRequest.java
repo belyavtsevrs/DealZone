@@ -17,23 +17,23 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ProductRequest {
-    @NotNull(message = "Title must not be null")
-    @Size(min = 5, message = "Title has to contain at least 5 letters")
-    private String title;
-    @NotBlank(message = "Description must not be empty")
-    private String description;
-    @NotNull(message = "Price must not be null")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than zero")
-    private BigDecimal price;
-    private String principalName;
-    private List<MultipartFile> images = new ArrayList<>(Arrays.asList(null, null, null));
+    public class ProductRequest {
+        @NotNull(message = "Title must not be null")
+        @Size(min = 5, message = "Title has to contain at least 5 letters")
+        private String title;
+        @NotBlank(message = "Description must not be empty")
+        private String description;
+        @NotNull(message = "Price must not be null")
+        @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than zero")
+        private BigDecimal price;
+        private String principalName;
+        private List<MultipartFile> images = new ArrayList<>(Arrays.asList(null, null, null));
 
-    public Product toProduct() {
-        return Product.builder()
-                .title(this.title)
-                .description(this.description)
-                .price(this.price)
-                .build();
-    }
+        public Product toProduct() {
+            return Product.builder()
+                    .title(this.title)
+                    .description(this.description)
+                    .price(this.price)
+                    .build();
+        }
 }

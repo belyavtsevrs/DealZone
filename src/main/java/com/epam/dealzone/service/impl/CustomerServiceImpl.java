@@ -1,20 +1,14 @@
 package com.epam.dealzone.service.impl;
 
 import com.epam.dealzone.domain.entity.Customer;
-import com.epam.dealzone.domain.entity.Image;
 import com.epam.dealzone.domain.enums.Role;
 import com.epam.dealzone.repository.CustomerRepository;
 import com.epam.dealzone.service.CustomerService;
 import com.epam.dealzone.web.dto.CustomerRequest;
 import com.epam.dealzone.web.dto.CustomerResponse;
-import com.epam.dealzone.web.dto.ProductRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.util.ReflectionUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -60,7 +54,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerResponse retrieve(String name) {
-
         return CustomerResponse.toResponse(customerRepository.findCustomerByEmail(name).get());
     }
 

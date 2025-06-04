@@ -30,11 +30,11 @@ public class CustomerRequest {
     private String email;
     @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
-    @NotBlank
+    @NotBlank(message = "can not be empty")
     private String name;
-    @NotBlank
+    @NotBlank(message = "can not be empty")
     private String surname;
-    @NotBlank
+    @NotBlank(message = "can not be empty")
     private String city;
     @Pattern(regexp = "\\+?[0-9]{10,15}", message = "Invalid phone number")
     private String phoneNumber;

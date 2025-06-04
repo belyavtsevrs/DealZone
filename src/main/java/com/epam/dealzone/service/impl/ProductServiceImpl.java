@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -116,8 +117,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void saver(ProductRequest request) {
         List<MultipartFile> imagesList = request.getImages().stream()
+                .filter(Objects::nonNull)
                 .filter(image -> !image.isEmpty())
                 .toList();
+
         Customer owner = customerRepository.findCustomerByEmail(request.getPrincipalName())
                 .orElseThrow(()->{
                     throw new RuntimeException("user not found");

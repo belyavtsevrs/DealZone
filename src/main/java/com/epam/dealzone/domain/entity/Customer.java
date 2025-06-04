@@ -39,8 +39,7 @@ public class Customer {
     private boolean active;
     @Column(name = "created_at")
     private LocalDateTime creationDate;
-
-    @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Product> products;
 
     @ElementCollection(

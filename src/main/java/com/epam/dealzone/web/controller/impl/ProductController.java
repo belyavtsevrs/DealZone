@@ -51,20 +51,10 @@ public class ProductController {
         return "productCreationForm";
     }
 
-    /*@PostMapping("/sell-product")
-    public String createProduct(
-            @ModelAttribute ProductRequest productRequest,
-            @RequestParam("images") List<MultipartFile> images,Principal principal) {
-
-        productRequest.setPrincipalName(principal.getName());
-        productService.createWithImage(productRequest, images);
-        return "redirect:/products/";
-    }*/
 
     @PostMapping("/sell-product")
     public String createProduct(
             @ModelAttribute ProductRequest productRequest,Principal principal) {
-
         productRequest.setPrincipalName(principal.getName());
         productServiceImpl.saver(productRequest);
         return "redirect:/products/";

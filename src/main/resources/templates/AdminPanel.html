@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/products.css}">
+</head>
+<body>
+<div class="product-wrapper">
+    <div class="product-container">
+        <table>
+            <thead>
+            <tr>
+                <td>Email</td>
+                <td>Phone number</td>
+                <td>activity</td>
+                <td>role</td>
+                <td>is active</td>
+                <td>profile</td>
+                <td>delete</td>
+            </tr>
+            </thead>
+            <tbody>
+                <tr th:each="customer : ${customers}">
+                    <td th:text="${customer.email}"></td>
+                    <td th:text="${customer.phoneNumber}"></td>
+                    <td th:text="${customer.active}"></td>
+                    <td th:each="role : ${customer.role}"><h4 th:text="${role}"></h4><br>  </td>
+                    <td>
+                        <form method="GET" th:object="${customer}" th:action="@{/admin/ban/{id}(id=${customer.uuid})}">
+                            <input type="submit" value="ban">
+                        </form>
+                    </td>
+                    <td>
+                        <a th:href="@{/customers/profile/{uuid}(uuid=${customer.uuid})}" class="view-link">user profile</a>
+                    </td>
+                    <td>
+                        <form method="GET" th:action="@{/admin/delete/{uuid}(uuid=${customer.uuid})}">
+                            <button type="submit" class="delete-btn">Delete Product</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
