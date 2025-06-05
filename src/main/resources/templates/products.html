@@ -9,9 +9,9 @@
 <body>
 
 <div class="top-bar">
-    <form method="get" th:action="@{/}" class="search-product">
-        <label for="searchWord" class="sr-only">Search</label>
-            <input type="text" id="searchWord" name="searchWord" placeholder="Search...">
+    <form method="get" th:action="@{/products/}" class="search-product">
+        <label for="search" class="sr-only">Search</label>
+        <input type="text" id="search" name="search" placeholder="Search...">
         <button type="submit" class="btn">Search</button>
     </form>
 
@@ -31,31 +31,49 @@
     <div class="product-container">
         <table>
             <thead>
-            <tr>
-                <th>Photo</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Created At</th>
-            </tr>
+                <tr>
+                    <th>Photo</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Created At</th>
+                </tr>
             </thead>
             <tbody>
-            <tr th:each="product : ${productList}"
-                class="clickable-row"
-                th:attr="data-uuid=${product.uuid}">
-                <td>
-                    <img th:if="${product.images != null and !product.images.isEmpty()}"
-                         th:src="@{/upload/productImages/{url}(url=${product.images[0]})}"
-                         alt="Preview"
-                         style="width:250px; height:250px; object-fit:cover; border-radius:4px;"/>
-                </td>
-                <td th:text="${product.title}">Title</td>
-                <td th:text="${product.description}">Description</td>
-                <td th:text="${product.price}">Price</td>
-                <td th:text="${product.creationDate}">Date</td>
-            </tr>
+                <tr th:each="product : ${productList}"
+                    class="clickable-row"
+                    th:attr="data-uuid=${product.uuid}">
+                    <td>
+                        <img th:if="${product.images != null and !product.images.isEmpty()}"
+                             th:src="@{/upload/productImages/{url}(url=${product.images[0]})}"
+                             alt="Preview"
+                             style="width:250px; height:250px; object-fit:cover; border-radius:4px;"/>
+                    </td>
+                    <td th:text="${product.title}">Title</td>
+                    <td th:text="${product.description}">Description</td>
+                    <td th:text="${product.price}">Price</td>
+                    <td th:text="${product.creationDate}">Date</td>
+                </tr>
             </tbody>
         </table>
+        <div class="pagination">
+            <ul>
+                <li th:if="${page.hasPrevious()}">
+                    <a th:href="@{/products/(page=${page.number - 1}, size=${page.size}, search=${search != null ? search : ''})}">Previous</a>
+                </li>
+
+                <li th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+                    th:classappend="${i == page.number} ? 'active'">
+                    <a th:href="@{/products/(page=${i}, size=${page.size}, search=${search != null ? search : ''})}"
+                       th:text="${i + 1}">Page number</a>
+                </li>
+
+                <li th:if="${page.hasNext()}">
+                    <a th:href="@{/products/(page=${page.number + 1}, size=${page.size}, search=${search != null ? search : ''})}">Next</a>
+                </li>
+            </ul>
+        </div>
+
     </div>
 
     <div class="action-buttons">

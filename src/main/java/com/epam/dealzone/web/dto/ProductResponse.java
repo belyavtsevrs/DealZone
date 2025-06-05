@@ -46,4 +46,14 @@ public class ProductResponse {
                 .emailOwner(owner.getEmail())
                 .build();
     }
+
+    public ProductRequest toRequest(){
+        ProductRequest request = new ProductRequest();
+        request.setTitle(this.title);
+        request.setDescription(this.description);
+        request.setPrice(this.price);
+        request.setPrincipalName(this.emailOwner);
+        request.setDescription(this.description);
+        return request;
+    }
 }

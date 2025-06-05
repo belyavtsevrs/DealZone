@@ -7,6 +7,8 @@ import com.epam.dealzone.service.CustomerService;
 import com.epam.dealzone.web.dto.CustomerRequest;
 import com.epam.dealzone.web.dto.CustomerResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -40,11 +42,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerResponse> retrieve(int page, int size) {
-        return List.of();
-    }
-
-    @Override
     public CustomerResponse retrieve(UUID uuid) {
         Customer customer = customerRepository.findById(uuid).orElseThrow(()->{
             throw new RuntimeException();
@@ -55,6 +52,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerResponse retrieve(String name) {
         return CustomerResponse.toResponse(customerRepository.findCustomerByEmail(name).get());
+    }
+
+    @Override
+    public Page<CustomerResponse> retrieve(String search, Pageable pageable) {
+        return null;
     }
 
     @Override
@@ -96,6 +98,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .city(request.getCity())
                 .avatar_url(url)
                 .creationDate(customer.getCreationDate())
+                .products(customer.getProducts())
                 .build();
 
         customerRepository.save(updated);

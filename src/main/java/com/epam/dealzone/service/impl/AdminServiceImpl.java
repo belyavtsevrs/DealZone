@@ -3,6 +3,9 @@ package com.epam.dealzone.service.impl;
 import com.epam.dealzone.domain.entity.Customer;
 import com.epam.dealzone.repository.CustomerRepository;
 import com.epam.dealzone.service.AdminService;
+import com.epam.dealzone.web.dto.ProductResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,10 +29,6 @@ public class AdminServiceImpl implements AdminService {
         return customerRepository.findAll();
     }
 
-    @Override
-    public List<Customer> retrieve(int page, int size) {
-        return List.of();
-    }
 
     @Override
     public Customer retrieve(UUID uuid) {
@@ -38,6 +37,11 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Customer retrieve(String name) {
+        return null;
+    }
+
+    @Override
+    public Page<Customer> retrieve(String search, Pageable pageable) {
         return null;
     }
 

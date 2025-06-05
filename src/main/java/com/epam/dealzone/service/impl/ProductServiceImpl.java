@@ -5,38 +5,42 @@ import com.epam.dealzone.domain.entity.Image;
 import com.epam.dealzone.domain.entity.Product;
 import com.epam.dealzone.repository.CustomerRepository;
 import com.epam.dealzone.repository.ProductRepository;
+import com.epam.dealzone.service.FileStorageService;
 import com.epam.dealzone.service.ProductService;
+import com.epam.dealzone.service.api.Paginator;
 import com.epam.dealzone.web.dto.ProductRequest;
 import com.epam.dealzone.web.dto.ProductResponse;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
 public class ProductServiceImpl implements ProductService {
     private static final String imageDir = "productImages";
-
     private final ProductRepository productRepository;
     private final CustomerRepository customerRepository;
     private final FileStorageServiceImpl storageService;
+    private final FileStorageService fileStorageService;
 
     public ProductServiceImpl(ProductRepository productRepository,
                               CustomerRepository customerRepository,
-                              FileStorageServiceImpl storageService) {
+                              FileStorageServiceImpl storageService, FileStorageService fileStorageService) {
         this.productRepository = productRepository;
         this.customerRepository = customerRepository;
         this.storageService = storageService;
+        this.fileStorageService = fileStorageService;
     }
 
     @Override
@@ -76,6 +80,7 @@ public class ProductServiceImpl implements ProductService {
         for (Image image : product.getImages()) {
             try {
                 Path imagePath = Path.of(imageDir,image.getUrl());
+                log.info("imageUrl = {}",imagePath);
                 Files.deleteIfExists(imagePath);
             } catch (IOException e) {
                 log.warn("Failed to delete image: {}", image.getUrl(), e);
@@ -94,11 +99,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> retrieve(int page, int size) {
-        return List.of();
-    }
-
-    @Override
     public ProductResponse retrieve(UUID uuid) {
         Product product = productRepository.findById(uuid)
                 .orElseThrow(()->{
@@ -112,6 +112,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse retrieve(String name) {
         return null;
+    }
+
+    @Override
+    public Page<ProductResponse> retrieve(String search, Pageable pageable) {
+        if(search == null || search.isBlank()){
+            return productRepository.findAll(pageable)
+                    .map(ProductResponse::toResponse);
+        }
+        return productRepository.findAllByTitleIgnoreCase(search,pageable)
+                .map(ProductResponse::toResponse);
     }
 
     @Override
@@ -149,8 +159,40 @@ public class ProductServiceImpl implements ProductService {
         Product existingProduct = productRepository.findById(uuid)
                 .orElseThrow(() -> new RuntimeException("not found" + uuid));
 
-        Product product = Product.builder()
-                .build();
-        productRepository.save(existingProduct);
+        List<MultipartFile> imagesList = request.getImages().stream()
+                .filter(Objects::nonNull)
+                .filter(image -> !image.isEmpty())
+                .toList();
+
+        int existImages = existingProduct.getImages().size();
+        int requestImages = imagesList.size();
+
+        for (int i = 0; i < requestImages; i++) {
+            String url = storageService.saveFile(imagesList.get(i), imageDir);
+            Image newImage = Image.builder()
+                    .url(url)
+                    .product(existingProduct)
+                    .build();
+
+            if (existImages < 3) {
+                existingProduct.getImages().add(newImage);
+                existImages++;
+            } else {
+                existingProduct.getImages().set(3 - requestImages + i, newImage);
+            }
+        }
+
+        Product updated = Product.builder()
+                        .uuid(uuid)
+                        .title(request.getTitle())
+                        .description(request.getDescription())
+                        .price(request.getPrice())
+                        .images(existingProduct.getImages())
+                        .creationDate(existingProduct.getCreationDate())
+                        .customer(existingProduct.getCustomer())
+                        .build();
+
+        productRepository.save(updated);
     }
+
 }

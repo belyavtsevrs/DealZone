@@ -53,7 +53,7 @@ function validateForm() {
         return false;
     }
 
-    if (!price || isNaN(price) || Number(price) <= 0) {
+    if (!price || isNaN(price) || Number(price) < 0) {
         alert("Please enter a valid price more than 0 ");
         return false;
     }
