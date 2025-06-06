@@ -15,7 +15,7 @@
         <button type="submit" class="btn">Search</button>
     </form>
 
-    <div class="user-section" th:if="${userPrincipal == null}">
+    <div class="user-section" th:if="${userPrincipal == null}" >
         <a th:href="@{/security/registration}" class="register-link">register</a>
     </div>
 

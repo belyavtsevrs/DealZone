@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.UUID;
 
 @Controller
-@PreAuthorize("hasAuthority('ADMIN_ROLE')")
+@PreAuthorize("hasAuthority('ADMIN')")
 @RequestMapping("/admin")
 public class AdminController {
     private final Retriever<Customer, UUID> retriever;

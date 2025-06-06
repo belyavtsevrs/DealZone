@@ -105,13 +105,13 @@ public class CustomerServiceImpl implements CustomerService {
                 .avatar_url(url)
                 .creationDate(customer.getCreationDate())
                 .products(customer.getProducts())
+                .favouriteProducts(customer.getFavouriteProducts())
                 .build();
 
         customerRepository.save(updated);
     }
 
     @Override
-    @Transactional
     public void addFavorite(UUID cId, UUID pId) {
         Customer customer = customerRepository.findById(cId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
