@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1749122729814-2" author="BelyavtsevRS">
+        <createTable tableName="customer_favourite_products">
+            <column name="customer_uuid" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_uuid" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey
+                tableName="customer_favourite_products"
+                columnNames="customer_uuid, product_uuid"
+                constraintName="pk_customer_favourite_products"/>
+
+        <addForeignKeyConstraint
+                baseTableName="customer_favourite_products"
+                baseColumnNames="customer_uuid"
+                constraintName="fk_fav_customer"
+                referencedTableName="customer"
+                referencedColumnNames="customer_uuid"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="customer_favourite_products"
+                baseColumnNames="product_uuid"
+                constraintName="fk_fav_product"
+                referencedTableName="product"
+                referencedColumnNames="product_uuid"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>

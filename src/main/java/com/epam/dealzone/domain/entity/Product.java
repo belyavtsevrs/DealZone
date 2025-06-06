@@ -5,9 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Getter
@@ -16,10 +14,11 @@ import java.util.UUID;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "product")
 public class Product {
     @Id
+    @EqualsAndHashCode.Include
     @Column(name = "product_uuid")
     private UUID uuid;
 
@@ -43,6 +42,10 @@ public class Product {
     @JoinColumn(name = "customer_uuid")
     @ToString.Exclude
     private Customer customer;
+
+    @ManyToMany(mappedBy = "favouriteProducts")
+    @ToString.Exclude
+    private List<Customer> likedByCustomers = new ArrayList<>();
 
     @PrePersist
     private void init() {

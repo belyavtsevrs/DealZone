@@ -33,12 +33,22 @@
                 </td>
             </tr>
             <tr>
+                <td colspan="2">
+                    <form method="POST" th:action="@{/customers/favorite/{uuid}(uuid=${product.uuid})}"
+                          th:if="${currentUser != null and !currentUser.isBlank() and currentUser != productOwner}">
+                        <button type="submit" class="delete-btn">favorite</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
                 <td colspan="2" style="text-align: center;" th:if="${currentUser == productOwner}">
                     <button type="button" class="sell-btn" onclick="toggleProductEditForm()">Edit Product</button>
                 </td>
             </tr>
         </table>
-
+        <div style="text-align: center; margin-top: 40px;">
+            <a th:href="@{/products/}" class="sell-btn">Back to Home</a>
+        </div>
     </div>
     <div id="productViewEditForm" style="display: none;">
         <h2 style="text-align: center; margin-bottom: 30px;">Edit Product</h2>

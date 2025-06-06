@@ -12,10 +12,11 @@ import java.util.UUID;
 @ToString(exclude = "product")
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "image")
 public class Image {
     @Id
+    @EqualsAndHashCode.Include
     @Column(name = "image_uuid")
     private UUID uuid;
     @Column(name = "image_url")
@@ -24,10 +25,7 @@ public class Image {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_uuid")
     private Product product;
-    /*@OneToOne
-    @JoinColumn(name = "customer_uuid")
-    private Customer customer;
-*/
+
     @PrePersist
     private void init(){
         if(uuid == null){

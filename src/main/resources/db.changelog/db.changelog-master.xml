@@ -9,4 +9,5 @@
     <include file="db.changelog/v0.0.1/init-customer-update-product-0.0.1v.xml" relativeToChangelogFile="false"/>
     <include file="db.changelog/v0.0.1/init-customer-role-update-customer.xml" relativeToChangelogFile="false"/>
     <include file="db.changelog/v0.0.1/update-customer-delete-image-constraint.xml" relativeToChangelogFile="false"/>
+    <include file="db.changelog/v0.0.1/init-favoriteList-0.0.1v.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

@@ -5,12 +5,17 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.UUID;
 
 public class UserDetailsImpl implements UserDetails {
     private Customer customer;
 
     public UserDetailsImpl(Customer customer) {
         this.customer = customer;
+    }
+
+    public UUID getUUID(){
+        return this.customer.getUuid();
     }
 
     @Override

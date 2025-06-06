@@ -84,10 +84,11 @@ public class ProductController {
     @GetMapping("/product-info/{uuid}")
     public String productInfo(@PathVariable("uuid")UUID uuid, Model model,Principal principal){
         ProductResponse product = retriever.retrieve(uuid);
+        String principalName = principal != null ? principal.getName() : "";
         model.addAttribute("product",product);
         model.addAttribute("productRequest",product.toRequest());
         model.addAttribute("productOwner",product.getEmailOwner());
-        model.addAttribute("currentUser",principal.getName());
+        model.addAttribute("currentUser",principalName);
         return "productInfo";
     }
 

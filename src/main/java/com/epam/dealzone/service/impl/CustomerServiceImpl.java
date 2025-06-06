@@ -1,11 +1,15 @@
 package com.epam.dealzone.service.impl;
 
 import com.epam.dealzone.domain.entity.Customer;
+import com.epam.dealzone.domain.entity.Product;
 import com.epam.dealzone.domain.enums.Role;
 import com.epam.dealzone.repository.CustomerRepository;
+import com.epam.dealzone.repository.ProductRepository;
 import com.epam.dealzone.service.CustomerService;
 import com.epam.dealzone.web.dto.CustomerRequest;
 import com.epam.dealzone.web.dto.CustomerResponse;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,13 +26,15 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
     private final FileStorageServiceImpl fileStorageService;
-
+    private final ProductRepository productRepository;
     public CustomerServiceImpl(CustomerRepository customerRepository,
                                PasswordEncoder passwordEncoder,
-                               FileStorageServiceImpl fileStorageService) {
+                               FileStorageServiceImpl fileStorageService,
+                               ProductRepository productRepository) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
         this.fileStorageService = fileStorageService;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -102,5 +108,19 @@ public class CustomerServiceImpl implements CustomerService {
                 .build();
 
         customerRepository.save(updated);
+    }
+
+    @Override
+    @Transactional
+    public void addFavorite(UUID cId, UUID pId) {
+        Customer customer = customerRepository.findById(cId)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        Product product = productRepository.findById(pId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        customer.getFavouriteProducts().add(product);
+        log.info("favorites = {}",customer.getFavouriteProducts());
+        customerRepository.save(customer);
     }
 }

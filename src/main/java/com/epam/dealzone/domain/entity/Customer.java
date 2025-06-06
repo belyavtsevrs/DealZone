@@ -5,9 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Getter
@@ -15,10 +13,11 @@ import java.util.UUID;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "customer")
 public class Customer {
     @Id
+    @EqualsAndHashCode.Include
     @Column(name = "customer_uuid")
     private UUID uuid;
     @Column(name = "email")
@@ -41,6 +40,15 @@ public class Customer {
     private LocalDateTime creationDate;
     @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Product> products;
+    @ManyToMany()
+    @JoinTable(
+            name = "customer_favourite_products",
+            joinColumns = @JoinColumn(name = "customer_uuid"),
+            inverseJoinColumns = @JoinColumn(name = "product_uuid")
+    )
+    @ToString.Exclude
+    @Builder.Default
+    private List<Product> favouriteProducts = new ArrayList<>();
 
     @ElementCollection(
             targetClass = Role.class,

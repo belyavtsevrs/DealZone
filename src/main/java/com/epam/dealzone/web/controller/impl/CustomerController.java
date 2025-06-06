@@ -1,17 +1,19 @@
 package com.epam.dealzone.web.controller.impl;
 
 import com.epam.dealzone.domain.entity.Customer;
+import com.epam.dealzone.repository.CustomerRepository;
+import com.epam.dealzone.security.UserDetailsImpl;
+import com.epam.dealzone.service.api.Favoriter;
 import com.epam.dealzone.service.api.Retriever;
 import com.epam.dealzone.service.api.Updater;
 import com.epam.dealzone.web.dto.CustomerRequest;
 import com.epam.dealzone.web.dto.CustomerResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.UUID;
@@ -21,11 +23,17 @@ import java.util.UUID;
 public class CustomerController {
     private final Retriever<CustomerResponse, UUID> retriever;
     private final Updater<CustomerRequest,UUID> updater;
+    private final Favoriter<UUID,UUID> favoriter;
+    private final CustomerRepository customerRepository;
+
     public CustomerController(
             @Qualifier("customerServiceImpl") Retriever<CustomerResponse, UUID> retriever,
-            @Qualifier("customerServiceImpl")Updater<CustomerRequest, UUID> updater) {
+            @Qualifier("customerServiceImpl")Updater<CustomerRequest, UUID> updater,
+            Favoriter<UUID, UUID> favoriter, CustomerRepository customerRepository) {
         this.retriever = retriever;
         this.updater = updater;
+        this.favoriter = favoriter;
+        this.customerRepository = customerRepository;
     }
 
     @GetMapping("/profile/{param}")
@@ -48,5 +56,12 @@ public class CustomerController {
     public String updateCustomer(@PathVariable("uuid") UUID uuid,CustomerRequest request){
         updater.updater(request,uuid);
         return "redirect:/customers/profile/"+uuid;
+    }
+
+    @PostMapping("/favorite/{uuid}")
+    public String favorite(@PathVariable("uuid") UUID uuid, Principal principal) {
+        Customer customer = customerRepository.findCustomerByEmail(principal.getName()).get();
+        favoriter.addFavorite(customer.getUuid(),uuid);
+        return "redirect:/products/product-info/" + uuid;
     }
 }
