@@ -29,7 +29,6 @@ public class AdminServiceImpl implements AdminService {
         return customerRepository.findAll();
     }
 
-
     @Override
     public Customer retrieve(UUID uuid) {
         return customerRepository.findById(uuid).get();
@@ -37,12 +36,12 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Customer retrieve(String name) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Page<Customer> retrieve(String search, Pageable pageable) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
 

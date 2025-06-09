@@ -32,7 +32,6 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CustomerRepository customerRepository;
     private final FileStorageServiceImpl storageService;
-    private final FileStorageService fileStorageService;
 
     public ProductServiceImpl(ProductRepository productRepository,
                               CustomerRepository customerRepository,
@@ -40,7 +39,6 @@ public class ProductServiceImpl implements ProductService {
         this.productRepository = productRepository;
         this.customerRepository = customerRepository;
         this.storageService = storageService;
-        this.fileStorageService = fileStorageService;
     }
 
     @Override
@@ -79,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
                 });
         for (Image image : product.getImages()) {
             try {
-                Path imagePath = Path.of(imageDir,image.getUrl());
+                Path imagePath = Path.of("upload/"+imageDir,image.getUrl());
                 log.info("imageUrl = {}",imagePath);
                 Files.deleteIfExists(imagePath);
             } catch (IOException e) {
@@ -111,7 +109,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse retrieve(String name) {
-        return null;
+        throw  new UnsupportedOperationException();
     }
 
     @Override

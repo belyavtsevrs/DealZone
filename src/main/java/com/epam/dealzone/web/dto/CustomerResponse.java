@@ -41,7 +41,7 @@ public class CustomerResponse {
 
         List<ProductResponse> responses = customer.getProducts()
                 .stream()
-                .map(x-> ProductResponse.toResponse(x))
+                .map(ProductResponse::toResponse)
                 .toList();
         List<ProductResponse> favorites = customer.getFavouriteProducts()
                 .stream()

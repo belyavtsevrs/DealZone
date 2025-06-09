@@ -39,13 +39,17 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void deleter(UUID uuid) {
+        if(!customerRepository.existsById(uuid)){
+            throw new RuntimeException();
+        }
         customerRepository.deleteById(uuid);
     }
 
     @Override
     public List<CustomerResponse> retrieve() {
-        return List.of();
+        throw new UnsupportedOperationException();
     }
+
 
     @Override
     public CustomerResponse retrieve(UUID uuid) {
@@ -57,12 +61,15 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerResponse retrieve(String name) {
-        return CustomerResponse.toResponse(customerRepository.findCustomerByEmail(name).get());
+        Customer customer = customerRepository.findCustomerByEmail(name).orElseThrow(()->{
+            throw new RuntimeException();
+        });
+        return CustomerResponse.toResponse(customer);
     }
 
     @Override
     public Page<CustomerResponse> retrieve(String search, Pageable pageable) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
