@@ -4,6 +4,7 @@ import com.epam.dealzone.domain.entity.Customer;
 import com.epam.dealzone.repository.CustomerRepository;
 import com.epam.dealzone.service.AdminService;
 import com.epam.dealzone.web.dto.ProductResponse;
+import com.epam.dealzone.web.error.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -71,7 +72,9 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void banUser(UUID uuid) {
         Customer customer = customerRepository.findById(uuid)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(
+                        NotFoundException.CODE.PRODUCT_NOT_FOUND_WITH_SUCH_ID::get
+                );
 
         Customer updatedCustomer = Customer.builder()
                 .uuid(customer.getUuid())

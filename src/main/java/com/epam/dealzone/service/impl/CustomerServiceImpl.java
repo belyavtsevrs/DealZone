@@ -8,6 +8,7 @@ import com.epam.dealzone.repository.ProductRepository;
 import com.epam.dealzone.service.CustomerService;
 import com.epam.dealzone.web.dto.CustomerRequest;
 import com.epam.dealzone.web.dto.CustomerResponse;
+import com.epam.dealzone.web.error.NotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void deleter(UUID uuid) {
         if(!customerRepository.existsById(uuid)){
-            throw new RuntimeException();
+            throw NotFoundException.CODE.CUSTOMER_NOT_FOUND_WITH_SUCH_ID.get();
         }
         customerRepository.deleteById(uuid);
     }
@@ -61,9 +62,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerResponse retrieve(String name) {
-        Customer customer = customerRepository.findCustomerByEmail(name).orElseThrow(()->{
-            throw new RuntimeException();
-        });
+        Customer customer = customerRepository.findCustomerByEmail(name).orElseThrow(
+                NotFoundException.CODE.CUSTOMER_NOT_FOUND_WITH_SUCH_EMAIL::get
+        );
         return CustomerResponse.toResponse(customer);
     }
 
@@ -94,7 +95,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void updater(CustomerRequest request, UUID uuid) {
         Customer customer = customerRepository.findById(uuid)
-                .orElseThrow(() -> new RuntimeException("Customer not found with uuid: " + uuid));
+                .orElseThrow(
+                        NotFoundException.CODE.CUSTOMER_NOT_FOUND_WITH_SUCH_ID::get
+                );
 
         String url = request.getNewAvatar().isEmpty()
                 ? customer.getAvatar_url()
@@ -121,11 +124,13 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void addFavorite(UUID cId, UUID pId) {
         Customer customer = customerRepository.findById(cId)
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
-
+                .orElseThrow(
+                        NotFoundException.CODE.PRODUCT_NOT_FOUND_WITH_SUCH_ID::get
+                );
         Product product = productRepository.findById(pId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-
+                .orElseThrow(
+                        NotFoundException.CODE.CUSTOMER_NOT_FOUND_WITH_SUCH_ID::get
+                );
         customer.getFavouriteProducts().add(product);
         log.info("favorites = {}",customer.getFavouriteProducts());
         customerRepository.save(customer);

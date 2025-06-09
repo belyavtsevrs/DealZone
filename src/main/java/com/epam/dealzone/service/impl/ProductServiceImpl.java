@@ -10,6 +10,7 @@ import com.epam.dealzone.service.ProductService;
 import com.epam.dealzone.service.api.Paginator;
 import com.epam.dealzone.web.dto.ProductRequest;
 import com.epam.dealzone.web.dto.ProductResponse;
+import com.epam.dealzone.web.error.NotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
@@ -48,9 +49,9 @@ public class ProductServiceImpl implements ProductService {
                 .filter(image -> !image.isEmpty())
                 .toList();
         Customer owner = customerRepository.findCustomerByEmail(request.getPrincipalName())
-                .orElseThrow(()->{
-                    throw new RuntimeException("user not found");
-                });
+                .orElseThrow(
+                        NotFoundException.CODE.PRODUCT_NOT_FOUND_WITH_SUCH_ID::get
+                );
         try {
             Product product = request.toProduct();
             for(int i = 0; i < imagesList.size();i++){
@@ -99,9 +100,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse retrieve(UUID uuid) {
         Product product = productRepository.findById(uuid)
-                .orElseThrow(()->{
-                    throw new RuntimeException("not found ");
-                });
+                .orElseThrow(
+                        NotFoundException.CODE.PRODUCT_NOT_FOUND_WITH_SUCH_ID::get
+                );
         ProductResponse response = ProductResponse.toResponse(product);
         log.info("response = {}" , response);
         return response;
@@ -130,9 +131,9 @@ public class ProductServiceImpl implements ProductService {
                 .toList();
 
         Customer owner = customerRepository.findCustomerByEmail(request.getPrincipalName())
-                .orElseThrow(()->{
-                    throw new RuntimeException("user not found");
-                });
+                .orElseThrow(
+                        NotFoundException.CODE.CUSTOMER_NOT_FOUND_WITH_SUCH_ID::get
+                );
 
         try {
             Product product = request.toProduct();
